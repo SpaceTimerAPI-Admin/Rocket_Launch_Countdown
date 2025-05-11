@@ -1,0 +1,3 @@
+Flask
+requests
+rpi-rgb-led-matrix
