@@ -9,6 +9,6 @@
 
 - Run the setup script directly (for first-time installation):
   ```bash
-  chmod +x setup_access_point.sh
-  sudo bash setup_access_point.sh
+  chmod +x setup.sh
+  sudo bash setup.sh
   ```

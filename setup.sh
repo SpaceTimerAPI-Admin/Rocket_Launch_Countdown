@@ -17,8 +17,8 @@ make build-python PYTHON=$(which python3)
 cd bindings/python
 sudo python3 setup.py install
 
-# Return to project directory
-cd ~/Rocket_Launch_Countdown
+# Return to the project directory (regardless of location)
+cd "$(dirname "$0")"
 
 # Set up Python virtual environment
 python3 -m venv led-matrix-env
