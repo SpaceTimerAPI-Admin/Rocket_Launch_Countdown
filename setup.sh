@@ -1,61 +1,21 @@
 
 #!/bin/bash
-# Rocket Launch Countdown Automatic Setup Script
 echo "🚀 Starting Automatic Setup for Rocket Launch Countdown"
+sudo apt-get update && sudo apt-get upgrade -y
 
-# Update and Install Dependencies
-sudo apt-get update -y
-sudo apt-get upgrade -y
-sudo apt-get install -y git build-essential libgraphicsmagick++1-dev libwebp-dev python3-dev python3-pil python3-numpy cython3 python3-venv bluetooth bluez bluez-tools
+# Install Dependencies
+sudo apt-get install -y git build-essential libgraphicsmagick++1-dev libwebp-dev python3-dev python3-pil python3-numpy cython3
 
-# Ensure we are in the correct directory
-cd "$(dirname "$0")"
-PROJECT_DIR=$(pwd)
-echo "📁 Working Directory: $PROJECT_DIR"
+# Clone the LED matrix library
+git clone https://github.com/hzeller/rpi-rgb-led-matrix.git
+cd rpi-rgb-led-matrix
+make build-python PYTHON=$(which python3)
+cd ..
 
-# Set up Python Virtual Environment
-if [ ! -d "led-matrix-env" ]; then
-    python3 -m venv led-matrix-env
-fi
-source led-matrix-env/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt --break-system-packages
+# Setup WiFi Failover
+sudo cp failover_wifi.sh /usr/local/bin/failover_wifi.sh
+sudo chmod +x /usr/local/bin/failover_wifi.sh
+sudo bash -c 'echo "@reboot /usr/local/bin/failover_wifi.sh" >> /etc/crontab'
 
-# Bluetooth Setup (Just Works) with Auto Accept Pairing
-echo "🚀 Setting Up Bluetooth Configuration (Just Works + Auto Accept Pairing)"
-sudo systemctl enable bluetooth
-sudo systemctl start bluetooth
-
-bluetoothctl << EOF
-power on
-agent NoInputNoOutput
-default-agent
-discoverable on
-pairable on
-EOF
-
-# Set Bluetooth to "Just Works" mode and auto-accept
-sudo hciconfig hci0 sspmode 1
-sudo hciconfig hci0 class 0x6c0100
-sudo hciconfig hci0 name "Space Time Setup"
-
-# Automatically open the configuration page upon connection
-cat <<EOF | sudo tee /etc/systemd/system/bt-open-config.service
-[Unit]
-Description=Automatically Open Configuration Page on Bluetooth Connect
-After=bluetooth.target
-
-[Service]
-ExecStart=/bin/bash -c 'sleep 2 && python3 -m webbrowser -t "http://192.168.4.1"'
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable bt-open-config.service
-sudo systemctl restart bt-open-config.service
-
-echo "✅ Bluetooth Setup Complete. Configuration page will automatically open on connection, and pairing requests will be auto-accepted."
+echo "✅ Setup Complete. You can now run the countdown program using:"
+echo "source led-matrix-env/bin/activate && sudo python3 rocket_launch_countdown.py"
