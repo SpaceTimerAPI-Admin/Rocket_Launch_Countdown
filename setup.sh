@@ -25,6 +25,7 @@ pip install -r requirements.txt --break-system-packages
 echo "🚀 Setting Up Bluetooth Configuration (Just Works Mode)"
 sudo systemctl enable bluetooth
 sudo systemctl start bluetooth
+
 bluetoothctl << EOF
 power on
 agent on
@@ -38,4 +39,23 @@ sudo hciconfig hci0 sspmode 1
 sudo hciconfig hci0 class 0x6c0100
 sudo hciconfig hci0 name "Space Time Setup"
 
-echo "✅ Bluetooth Setup Complete. You can now pair with 'Space Time Setup' for configuration."
+# Automatically open the configuration page upon connection
+cat <<EOF | sudo tee /etc/systemd/system/bt-open-config.service
+[Unit]
+Description=Automatically Open Configuration Page on Bluetooth Connect
+After=bluetooth.target
+
+[Service]
+ExecStart=/bin/bash -c 'sleep 2 && python3 -m webbrowser -t "http://192.168.4.1"'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable bt-open-config.service
+sudo systemctl restart bt-open-config.service
+
+echo "✅ Bluetooth Setup Complete. Configuration page will automatically open on connection."
