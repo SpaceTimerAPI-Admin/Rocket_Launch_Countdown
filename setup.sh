@@ -21,20 +21,20 @@ source led-matrix-env/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt --break-system-packages
 
-# Bluetooth Setup (Just Works)
-echo "🚀 Setting Up Bluetooth Configuration (Just Works Mode)"
+# Bluetooth Setup (Just Works) with Auto Accept Pairing
+echo "🚀 Setting Up Bluetooth Configuration (Just Works + Auto Accept Pairing)"
 sudo systemctl enable bluetooth
 sudo systemctl start bluetooth
 
 bluetoothctl << EOF
 power on
-agent on
+agent NoInputNoOutput
 default-agent
 discoverable on
 pairable on
 EOF
 
-# Set Bluetooth to "Just Works" mode
+# Set Bluetooth to "Just Works" mode and auto-accept
 sudo hciconfig hci0 sspmode 1
 sudo hciconfig hci0 class 0x6c0100
 sudo hciconfig hci0 name "Space Time Setup"
@@ -58,4 +58,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable bt-open-config.service
 sudo systemctl restart bt-open-config.service
 
-echo "✅ Bluetooth Setup Complete. Configuration page will automatically open on connection."
+echo "✅ Bluetooth Setup Complete. Configuration page will automatically open on connection, and pairing requests will be auto-accepted."
