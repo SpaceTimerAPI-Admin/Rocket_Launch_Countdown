@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rocket Launch Configuration</title>
+</head>
+<body>
+    <h2>Rocket Launch Countdown Configuration</h2>
+    <form method="post">
+        <label>Display Text:</label>
+        <input type="text" name="display_text" value="{{ config.display_text }}"><br>
+
+        <label>Timezone:</label>
+        <input type="text" name="timezone" value="{{ config.timezone }}"><br>
+
+        <label>Launch Sites:</label><br>
+        {% for site in launch_sites %}
+            <input type="checkbox" name="launch_sites" value="{{ site }}"
+            {% if site in config.launch_sites %}checked{% endif %}> {{ site }}<br>
+        {% endfor %}
+
+        <h3>WiFi Settings</h3>
+        <label>WiFi SSID:</label>
+        <input type="text" name="wifi_ssid" value="{{ config.wifi_ssid }}"><br>
+        <label>WiFi Password:</label>
+        <input type="password" name="wifi_password" value="{{ config.wifi_password }}"><br>
+
+        <button type="submit">Save Settings</button>
+    </form>
+</body>
+</html>
