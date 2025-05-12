@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Launch Countdown Configuration</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Rocket Launch Countdown Configuration</h1>
+
+    <div>
+        <label for="location-filter">Select Launch Locations:</label>
+        <select id="location-filter" multiple>
+            <option value="all">All Locations</option>
+            <option value="cape_canaveral">Cape Canaveral</option>
+            <option value="kennedy_space_center">Kennedy Space Center</option>
+            <option value="vandenberg">Vandenberg</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="test-mode">Test Mode:</label>
+        <input type="checkbox" id="test-mode">
+    </div>
+
+    <button onclick="saveSettings()">Save Settings</button>
+
+    <script>
+        function saveSettings() {
+            const locations = Array.from(document.getElementById('location-filter').selectedOptions).map(option => option.value);
+            const testMode = document.getElementById('test-mode').checked;
+
+            fetch('/save-settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ locations: locations, test_mode: testMode })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Settings saved successfully!');
+                } else {
+                    alert('Failed to save settings.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
