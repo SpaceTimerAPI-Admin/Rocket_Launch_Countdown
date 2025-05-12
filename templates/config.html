@@ -2,30 +2,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rocket Launch Configuration</title>
+    <title>Space Timer Configuration</title>
 </head>
 <body>
-    <h2>Rocket Launch Countdown Configuration</h2>
-    <form method="post">
-        <label>Display Text:</label>
-        <input type="text" name="display_text" value="{{ config.display_text }}"><br>
-
-        <label>Timezone:</label>
-        <input type="text" name="timezone" value="{{ config.timezone }}"><br>
-
-        <label>Launch Sites:</label><br>
-        {% for site in launch_sites %}
-            <input type="checkbox" name="launch_sites" value="{{ site }}"
-            {% if site in config.launch_sites %}checked{% endif %}> {{ site }}<br>
-        {% endfor %}
-
-        <h3>WiFi Settings</h3>
-        <label>WiFi SSID:</label>
+    <h2>Space Timer Configuration</h2>
+    <form method="POST">
+        <label>Launch Sites (Select multiple):</label><br>
+        <select name="launch_sites" multiple>
+            <option value="Cape Canaveral">Cape Canaveral</option>
+            <option value="Kennedy Space Center">Kennedy Space Center</option>
+            <option value="Vandenberg Space Force Base">Vandenberg Space Force Base</option>
+        </select><br><br>
+        
+        <label>WiFi SSID:</label><br>
         <input type="text" name="wifi_ssid" value="{{ config.wifi_ssid }}"><br>
-        <label>WiFi Password:</label>
+        
+        <label>WiFi Password:</label><br>
         <input type="password" name="wifi_password" value="{{ config.wifi_password }}"><br>
-
-        <button type="submit">Save Settings</button>
+        
+        <input type="submit" value="Save Settings">
     </form>
 </body>
 </html>

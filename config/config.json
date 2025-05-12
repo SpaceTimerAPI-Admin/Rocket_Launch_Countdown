@@ -1,7 +1,5 @@
 {
-    "timezone": "UTC",
+    "launch_sites": [],
     "wifi_ssid": "",
-    "wifi_password": "",
-    "brightness": 50,
-    "selected_pads": []
+    "wifi_password": ""
 }
